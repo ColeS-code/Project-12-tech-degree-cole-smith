@@ -4,7 +4,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const Sequelize = require('sequelize');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 const models = require('./models');
 const { Course, User } = models;
@@ -74,7 +74,7 @@ app.post('/api/users', ( async (req, res, next) => {
   try {
     const user = req.body;
 
-    // possible validaiton errors
+    // possible validation errors
     const errors = [];
     if(!user.firstName){
       errors.push('Please provide a first name');
@@ -110,9 +110,9 @@ app.post('/api/users', ( async (req, res, next) => {
 
 }));
 
-// READ all courses with connected user
+// READ all courses with the connected user
 app.get('/api/courses', asyncHandler( async (req, res) => {
-   const courses = await Course.findAll({
+   const courses = await courses.findAll({
     include: [
       {
         model: User,
@@ -133,7 +133,7 @@ app.post('/api/courses', authenticateUser, asyncHandler( async (req, res) => {
   const user = req.currentUser;
   let course = req.body;
 
-  // possible validaiton errors
+  // possible validation errors
   const errors = [];
   if(!course.title){
     errors.push('Please provide a title');
@@ -154,7 +154,7 @@ app.post('/api/courses', authenticateUser, asyncHandler( async (req, res) => {
   }
 }));
 
-// READ one course with connected user
+// READ one course with the connected user
 app.get('/api/courses/:id', asyncHandler( async (req, res) => {
   const course = await Course.findOne({
     where: {
@@ -187,7 +187,7 @@ app.put('/api/courses/:id', authenticateUser, asyncHandler( async (req, res) => 
     if(oneCourse) {
       const course = req.body;
   
-      // possible validaiton errors
+      // possible validation errors
       const errors = [];
       if(!course.title){
         errors.push('Please provide a title');
@@ -226,7 +226,7 @@ app.delete('/api/courses/:id', authenticateUser, asyncHandler( async (req, res) 
   }
 }));
 
-// send 404 if no other route matched
+// send a 404 if no other route matched
 app.use((req, res) => {
   res.status(404).json({
     message: 'Route Not Found',
