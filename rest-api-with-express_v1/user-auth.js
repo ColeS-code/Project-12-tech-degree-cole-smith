@@ -19,7 +19,7 @@ exports.authenticateUser = async (req, res, next) => {
         if(user) {
             // compares the given password with the known password
             const authenticated = bcrypt
-                .compareSync(credentials.pass, users.password);
+                .compareSync(credentials.pass, user.password);
                 if(authenticated) {
                     console.log('Login Successful!');
 

@@ -112,7 +112,7 @@ app.post('/api/users', ( async (req, res, next) => {
 
 // READ all courses with the connected user
 app.get('/api/courses', asyncHandler( async (req, res) => {
-   const courses = await courses.findAll({
+   const courses = await course.findAll({
     include: [
       {
         model: User,

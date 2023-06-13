@@ -25,7 +25,8 @@ module.exports = (sequelize) => {
         password: {
             type: Sequelize.STRING
         }
-    }, { sequelize });
+    }, { sequelize }); 
+    
     Users.associate = (models) => {
         Users.hasMany(models.Courses, {
             as: 'teacher',
