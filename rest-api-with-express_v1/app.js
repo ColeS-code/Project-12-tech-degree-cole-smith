@@ -7,7 +7,7 @@ const Sequelize = require('sequelize');
 const bcrypt = require('bcrypt');
 
 const models = require('./models');
-const { Course, User } = models;
+const { Courses, Users } = models;
 const { authenticateUser } = require('./user-auth');
 
 const router = express.Router();
@@ -95,7 +95,7 @@ app.post('/api/users', ( async (req, res, next) => {
     if(errors.length > 0) {
       res.status(400).json({ errors });
     } else {
-      await User.create(user);
+      await Users.create(user);
       res.status(201).setHeader('Location', '/').end();
     }
   } catch(error) {
@@ -112,10 +112,10 @@ app.post('/api/users', ( async (req, res, next) => {
 
 // READ all courses with the connected user
 app.get('/api/courses', asyncHandler( async (req, res) => {
-   const courses = await course.findAll({
+   const courses = await Courses.findAll({
     include: [
       {
-        model: User,
+        model: Users,
         attributes: ['id', 'firstName', 'lastName', 'emailAddress'],
         as: 'teacher'
       }
@@ -149,20 +149,20 @@ app.post('/api/courses', authenticateUser, asyncHandler( async (req, res) => {
   if(errors.length > 0) {
     res.status(400).json({ errors });
   } else {
-    course = await Course.create(course);
+    course = await Courses.create(course);
     res.status(201).setHeader('Location', `/api/courses/${course.id}`).end();
   }
 }));
 
 // READ one course with the connected user
 app.get('/api/courses/:id', asyncHandler( async (req, res) => {
-  const course = await Course.findOne({
+  const course = await Courses.findOne({
     where: {
       id: req.params.id
     },
     include: [
       {
-        model: User,
+        model: Users,
         attributes: ['id', 'firstName', 'lastName', 'emailAddress'],
         as: 'teacher'
       }
@@ -182,7 +182,7 @@ app.get('/api/courses/:id', asyncHandler( async (req, res) => {
 // UPDATE one course 
 app.put('/api/courses/:id', authenticateUser, asyncHandler( async (req, res) => {
   const user = req.currentUser;
-  const oneCourse = await Course.findByPk(req.params.id);
+  const oneCourse = await Courses.findByPk(req.params.id);
   if(user.id === oneCourse.userId) {
     if(oneCourse) {
       const course = req.body;
@@ -217,7 +217,7 @@ app.put('/api/courses/:id', authenticateUser, asyncHandler( async (req, res) => 
 // DELETE one course
 app.delete('/api/courses/:id', authenticateUser, asyncHandler( async (req, res) => {
   const user = req.currentUser;
-  const course = await Course.findByPk(req.params.id);
+  const course = await Courses.findByPk(req.params.id);
   if(user.id === course.userId) {
     await course.destroy(course);
     res.status(204).end();
